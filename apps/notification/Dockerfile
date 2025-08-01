@@ -1,15 +1,25 @@
-FROM node:slim AS development
+FROM node:22-slim AS development
 
 WORKDIR /usr/src/app
 
-RUN apt-get update && apt-get install -y procps
+RUN apt-get update && apt-get install -y procps openssl
 
 COPY package.json ./
 COPY pnpm-lock.yaml ./
-COPY tsconfig.json tsconfig.json
-COPY nest-cli.json nest-cli.json
+COPY tsconfig.json ./
+COPY nest-cli.json ./
 
+# Install pnpm and dependencies
 RUN npm install -g pnpm
+RUN pnpm install
+RUN pnpm add -D prisma
 
+# Copy application code
 COPY apps/notification apps/notification
 COPY libs libs
+COPY prisma prisma
+COPY prisma.config.ts ./
+
+# Install prisma and generate client
+
+RUN npx prisma generate

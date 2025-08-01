@@ -1,53 +1,88 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Condo Management System (Microservices)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+A microservices-based Condo Management System built with NestJS, Prisma, and Docker. This system provides a scalable backend architecture for managing residential complexes, including unit management, resident tracking, maintenance requests, and more.
 
-## Description
+## 🚀 Features
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **Modular Architecture**: Built with microservices for better scalability and maintainability
+- **Type Safety**: Full TypeScript support
+- **Database**: PostgreSQL with Prisma ORM
+- **Containerized**: Easy deployment with Docker
+- **RESTful APIs**: Well-documented endpoints
+- **Authentication**: JWT-based authentication
+- **Event-Driven**: Uses Kafka for inter-service communication
 
-## Project setup
+## 🛠️ Prerequisites
+
+- Node.js (v18+)
+- pnpm
+- Docker & Docker Compose
+- PostgreSQL
+
+## 🚀 Getting Started
+
+1. **Clone the repository**
+   ```bash
+   git clone [your-repo-url]
+   cd condo-ms
+   ```
+
+
+
+2. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   # Update the .env file with your configuration
+   ```
+. **Run docker compose**
+   ```bash
+   docker-compose up -d
+   ```
+   # Development
+   pnpm run start:dev <app-name>
+   
+   # Production
+   pnpm run build
+   pnpm run start:prod
+   ```
+
+## 🧪 Running Tests
 
 ```bash
-$ pnpm install
+# Unit tests
+pnpm test
+
+# E2E tests
+pnpm test:e2e
 ```
 
-## Compile and run the project
+## 📦 Project Structure
 
-```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+```
+condo-ms/
+├── apps/              # Microservices
+├── libs/              # Shared libraries
+├── prisma/            # Database schema and migrations
+└── docker-compose.yml # Docker configuration
 ```
 
-## Run tests
+## 📝 API Documentation
 
-```bash
-# unit tests
+Once the application is running, access the API documentation at:
+- Swagger UI: `http://localhost:3000/docs`
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read our contributing guidelines before submitting pull requests.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 $ pnpm run test
 
 # e2e tests
