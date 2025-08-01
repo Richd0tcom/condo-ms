@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { MessagePattern } from '@nestjs/microservices';
 import { CreateCompanyInput } from '@app/common/types';
 import { ServiceResponse } from '@app/common/types/global';
-import { Company } from '@prisma/client';
+import { Company } from '@app/common/entities';
 
 @Controller()
 export class AuthController {
