@@ -60,8 +60,8 @@ services:
       dockerfile: ./apps/gateway/Dockerfile
       target: development
     container_name: db-migrate
-    env_file:
-      - .env
+    enviroment:
+      - DATABASE_URL=postgres://root:Madara123@postgg:5432/company_db
     command: sh -c "npx prisma migrate deploy && npx prisma generate"
     depends_on:
       postgg:
@@ -78,9 +78,8 @@ services:
       dockerfile: ./apps/gateway/Dockerfile
       target: development
     container_name: gateway
-    env_file:
-      - .env
-    environment:
+    enviroment:
+      - DATABASE_URL=postgres://root:Madara123@postgg:5432/company_db
       - KAFKA_BROKER=kafka:29092
     command: pnpm run start:dev gateway
     depends_on:
@@ -102,9 +101,9 @@ services:
       dockerfile: ./apps/auth/Dockerfile
       target: development
     container_name: auth
-    env_file:
-      - .env
-    environment:
+
+    enviroment:
+      - DATABASE_URL=postgres://root:Madara123@postgg:5432/company_db
       - KAFKA_BROKER=kafka:29092
     command: pnpm run start:dev auth
     depends_on:
@@ -124,7 +123,8 @@ services:
     container_name: notification
     env_file:
       - .env
-    environment:
+    enviroment:
+      - DATABASE_URL=postgres://root:Madara123@postgg:5432/company_db
       - KAFKA_BROKER=kafka:29092
     command: pnpm run start:dev notification
     depends_on:
