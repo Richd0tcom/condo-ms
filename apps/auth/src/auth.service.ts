@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
-import { KAFKA_CLIENTS } from '@app/common/kafka/kafka.constants';
+import { KAFKA_CLIENTS, KAFKA_TOPICS } from '@app/common/kafka/kafka.constants';
 import { PrismaService } from '@app/common/prisma.service';
 import { Company, Prisma } from '@prisma/client';
 import { CreateCompanyInput } from '@app/common/types';
@@ -11,12 +11,11 @@ export class AuthService {
   constructor(
     @Inject(KAFKA_CLIENTS.NOTIFICATION_SERVICE)
   private readonly notifClient: ClientKafka,
-
   private prisma: PrismaService
   ) {}
 
   async register(input: CreateCompanyInput): Promise<Company> {
-    //TODO: save company in db and use proper types
+    
 
     const companyExists = await this.prisma.company.findFirst({
       where: {
@@ -35,7 +34,7 @@ export class AuthService {
         domain: input.domain,
       },
     });
-    this.notifClient.emit('company.created', company);
+    this.notifClient.emit(KAFKA_TOPICS.COMPANY_CREATED, company);
 
     return company;
   }
