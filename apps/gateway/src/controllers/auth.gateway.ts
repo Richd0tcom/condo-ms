@@ -17,8 +17,12 @@ export class AuthGateway {
         private readonly authClient: ClientKafka
     ) {}
 
+    onModuleInit() {
+        this.authClient.subscribeToResponseOf('company.create');
+    }
+
     @Post()
     async registerCompany(@Body() payload: CreateCompanyInput) {
-        return await lastValueFrom<ServiceResponse<Company>>(this.authClient.send('auth.register', payload).pipe());
+        return await lastValueFrom<ServiceResponse<Company>>(this.authClient.send('company.create', payload).pipe());
     }
 }

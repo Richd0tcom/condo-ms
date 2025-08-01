@@ -13,6 +13,7 @@ export class KafkaClientModule {
           },
           consumer: {
             groupId,
+            allowAutoTopicCreation: true,
           },
         },
       },

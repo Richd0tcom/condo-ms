@@ -15,6 +15,7 @@ async function bootstrap() {
       },
       consumer: {
         groupId: 'auth-service-group',
+        allowAutoTopicCreation: true,
       },
     },
   });
