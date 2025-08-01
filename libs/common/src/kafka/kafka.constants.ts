@@ -9,3 +9,8 @@ export const enum KAFKA_CLIENTS {
     AUTH_SERVICE = 'AUTH_SERVICE',
     NOTIFICATION_SERVICE = 'NOTIFICATION_SERVICE',
 }
+
+export const enum KAFKA_GROUP_IDS {
+    AUTH_SERVICE_GROUP = 'auth-service-group',
+    NOTIFICATION_SERVICE_GROUP = 'notification-service-group',
+}

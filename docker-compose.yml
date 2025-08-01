@@ -1,0 +1,120 @@
+services:
+  postgg:
+    image: postgres:17-alpine
+    container_name: postgres_db_other2
+    environment:
+      - POSTGRES_PASSWORD=Madara123
+      - POSTGRES_USER=root
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
+      - postgres_condo:/var/lib/postgresql/data
+      # - /init-postgres.sql:docker-entrypoint-initdb.d/init-postgres.sql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-root} -d ${POSTGRES_DB:-company_db}"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  # Kafka for message queuing
+  zookeeper:
+    # image: confluentinc/cp-zookeeper:7.4.0
+    image: zookeeper:latest
+    container_name: sensor-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    volumes:
+      - zookeeper_data:/var/lib/zookeeper/data
+      - zookeeper_logs:/var/lib/zookeeper/log
+
+  kafka:
+    # image: confluentinc/cp-kafka:7.4.0
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: sensor-kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092" 
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: true
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+
+
+  gateway:
+    build:
+      context: .
+      dockerfile: ./apps/gateway/Dockerfile
+      target: development
+    container_name: gateway
+    env_file:
+      - .env
+    environment:
+      - KAFKA_BROKER=kafka:29092
+    command: pnpm run start:dev gateway
+    depends_on:
+      - auth
+      - notification
+    restart: unless-stopped
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - '4000:4000'
+    networks:
+      - company-network
+
+
+  auth:
+    build:
+      context: .
+      dockerfile: ./apps/auth/Dockerfile
+      target: development
+    container_name: auth
+    env_file:
+      - .env
+    command: pnpm run start:dev auth
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - '4010:4010'
+    networks:
+      - company-network
+
+  notification:
+    build:
+      context: .
+      dockerfile: ./apps/notification/Dockerfile
+      target: development
+    container_name: notification
+    env_file:
+      - .env
+    command: pnpm run start:dev notification
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - '4030:4030'
+    networks:
+      - company-network     
+volumes:
+  postgres_condo:
+  zookeeper_data:
+  zookeeper_logs:
+  kafka_data:
+
+networks:
+  company-network:
+    driver: bridge
