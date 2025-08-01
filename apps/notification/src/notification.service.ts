@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class NotificationService {
-  getHello(): string {
-    return 'Hello World!';
+  //TODO: use proper type
+  async sendEmail(data: any): Promise<void> {
+    console.log(`Sending welcome email to ${data.email} (${data.name})`);
   }
 }
