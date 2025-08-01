@@ -1,6 +1,9 @@
 import { KAFKA_CLIENTS } from "@app/common/kafka/kafka.constants";
+import { CreateCompanyInput } from "@app/common/types";
+import { ServiceResponse } from "@app/common/types/global";
 import { Controller, Inject, Post } from "@nestjs/common";
 import { ClientKafka } from "@nestjs/microservices";
+import { Company } from "@prisma/client";
 import { lastValueFrom } from "rxjs";
 
 
@@ -13,8 +16,7 @@ export class AuthGateway {
     ) {}
 
     @Post()
-    async registerCompany(payload: any) {
-        const response = await lastValueFrom(this.authClient.send('auth.register', payload));
-        return response;
+    async registerCompany(payload: CreateCompanyInput) {
+        return await lastValueFrom<ServiceResponse<Company>>(this.authClient.send('auth.register', payload).pipe());
     }
 }
