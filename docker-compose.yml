@@ -7,6 +7,8 @@ services:
       - POSTGRES_USER=root
     ports:
       - "5433:5432"
+    networks:
+      - company-network
     volumes:
       - ./init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql
       - postgres_condo:/var/lib/postgresql/data
@@ -24,6 +26,8 @@ services:
     # image: confluentinc/cp-zookeeper:7.4.0
     image: zookeeper:latest
     container_name: sensor-zookeeper
+    networks:
+      - company-network
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -35,6 +39,8 @@ services:
     # image: confluentinc/cp-kafka:7.4.0
     image: confluentinc/cp-kafka:7.4.0
     container_name: sensor-kafka
+    networks:
+      - company-network
     depends_on:
       - zookeeper
     ports:
@@ -60,8 +66,8 @@ services:
       dockerfile: ./apps/gateway/Dockerfile
       target: development
     container_name: db-migrate
-    enviroment:
-      - DATABASE_URL=postgres://root:Madara123@postgg:5432/company_db
+    environment:
+      - DATABASE_URL=postgresql://root:Madara123@postgg:5432/company_db?connect_timeout=300
     command: sh -c "npx prisma migrate deploy && npx prisma generate"
     depends_on:
       postgg:
@@ -78,8 +84,8 @@ services:
       dockerfile: ./apps/gateway/Dockerfile
       target: development
     container_name: gateway
-    enviroment:
-      - DATABASE_URL=postgres://root:Madara123@postgg:5432/company_db
+    environment:
+      - DATABASE_URL=postgresql://root:Madara123@postgg:5432/company_db
       - KAFKA_BROKER=kafka:29092
     command: pnpm run start:dev gateway
     depends_on:
@@ -101,8 +107,7 @@ services:
       dockerfile: ./apps/auth/Dockerfile
       target: development
     container_name: auth
-
-    enviroment:
+    environment:
       - DATABASE_URL=postgres://root:Madara123@postgg:5432/company_db
       - KAFKA_BROKER=kafka:29092
     command: pnpm run start:dev auth
@@ -121,9 +126,7 @@ services:
       dockerfile: ./apps/notification/Dockerfile
       target: development
     container_name: notification
-    env_file:
-      - .env
-    enviroment:
+    environment:
       - DATABASE_URL=postgres://root:Madara123@postgg:5432/company_db
       - KAFKA_BROKER=kafka:29092
     command: pnpm run start:dev notification
