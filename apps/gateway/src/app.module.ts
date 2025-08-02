@@ -9,7 +9,7 @@ import { KAFKA_CLIENTS } from '@app/common/kafka/kafka.constants';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    KafkaClientModule.register(KAFKA_CLIENTS.AUTH_SERVICE, 'api-gateway-auth-group')
+    KafkaClientModule.register(KAFKA_CLIENTS.AUTH_SERVICE, 'auth-service-group')
   ],
   controllers: [AuthGateway],
   providers: [AppService],
