@@ -57,7 +57,7 @@ condo-ms/
 ## 📝 API Documentation
 
 Once the application is running, access the API documentation at:
-- Swagger UI: `http://localhost:3000/docs`
+- Swagger UI: `http://localhost:4000/docs`
 
 ## 🤝 Contributing
 
